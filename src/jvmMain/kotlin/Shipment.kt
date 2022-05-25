@@ -8,15 +8,20 @@ class Shipment(id: String, timestamp: Long): Observable {
     var expectedDeliveryDate: Long = 0
     var currentLocation: String = "Factory"
     var updateHistory = mutableListOf<Update>()
+    private val observers = mutableListOf<Observer>()
 
 
 
     override fun addObserver(observer: Observer) {
-        TODO("Not yet implemented")
+        observers.add(observer)
     }
 
     override fun removeObserver(observer: Observer) {
-        TODO("Not yet implemented")
+        observers.remove(observer)
+    }
+
+    private fun notifyObservers() {
+        observers.forEach { it.notify(status)}
     }
 
     fun addNote(note: String){
@@ -25,6 +30,7 @@ class Shipment(id: String, timestamp: Long): Observable {
 
     fun addUpdate(update: Update){
         updateHistory.add(update)
+        notifyObservers()
     }
 
 

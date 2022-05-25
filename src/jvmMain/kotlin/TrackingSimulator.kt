@@ -1,11 +1,16 @@
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
-class TrackingSimulator(val shipFile: String) {
+object TrackingSimulator {
 
     var shipments = mutableListOf<Shipment>()
 
-    fun findShipment(id: String): Shipment {
-        return shipments.find {it.id == id}!!
+    fun findShipment(id: String): Shipment? {
+        return shipments.find {it.id == id}
     }
 
 
@@ -14,38 +19,46 @@ class TrackingSimulator(val shipFile: String) {
         shipments.add(newShipment)
     }
 
-    fun runSimulation(){
-        val instructions = parseShipments(shipFile)
+    suspend fun runSimulation() = coroutineScope {
 
-        instructions.forEach(){
+        launch {
+            val instructions = parseShipments("test.txt")
 
-            if(it[0] == "created"){
-                addShipment(it)
-            }
-            else{
-                val updateStrategies = mapOf<String, UpdateStrategy>(
-                    Pair("delayed", DelayedStrategy(findShipment(it[1]))),
-                    Pair("shipped", ShippedStrategy(findShipment(it[1]))),
-                    Pair("location", LocationStrategy(findShipment(it[1]))),
-                    Pair("noteadded", NoteAddedStrategy(findShipment(it[1]))),
-                    Pair("lost", LostCanceledDeliveredStrategy(findShipment(it[1]))),
-                    Pair("canceled", LostCanceledDeliveredStrategy(findShipment(it[1]))),
-                    Pair("delivered", LostCanceledDeliveredStrategy(findShipment(it[1]))),
+            instructions.forEach(){
+                println(it[0])
 
-                )
+                if(it[0] == "created"){
+                    addShipment(it)
+                }
+                else{
+                    val updateStrategies = mapOf<String, UpdateStrategy>(
+                        Pair("delayed", DelayedStrategy(findShipment(it[1])!!)),
+                        Pair("shipped", ShippedStrategy(findShipment(it[1])!!)),
+                        Pair("location", LocationStrategy(findShipment(it[1])!!)),
+                        Pair("noteadded", NoteAddedStrategy(findShipment(it[1])!!)),
+                        Pair("lost", LostCanceledDeliveredStrategy(findShipment(it[1])!!)),
+                        Pair("canceled", LostCanceledDeliveredStrategy(findShipment(it[1])!!)),
+                        Pair("delivered", LostCanceledDeliveredStrategy(findShipment(it[1])!!)),
 
-
-                updateStrategies[it[0]]?.update(it)
-            }
-            for(shipment in shipments){
-                println(shipment.id + " " + shipment.status)
-            }
-            println("============================")
-            Thread.sleep(1_000)
+                        )
 
 
-
+                    updateStrategies[it[0]]?.update(it)
+                }
+                for(shipment in shipments){
+                    println(shipment.id + " " + shipment.status)
+                }
+                println("============================")
+                //Thread.sleep(1_000)
+                delay(1000)
         }
+
+
+
+
+
+       }
+        //println("Testing")
 
 
     }

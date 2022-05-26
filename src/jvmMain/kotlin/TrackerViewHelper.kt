@@ -25,5 +25,9 @@ class TrackerViewHelper(val shipmentId: String): Observer {
 
     }
 
+    fun removeShipment(){
+        shipment?.removeObserver(this)
+    }
+
 
 }

@@ -34,15 +34,15 @@ fun ShipmentView(viewHelper: TrackerViewHelper, coroutineScope: CoroutineScope) 
 
         Text("Updates: ")
         Column{
-            for(update in viewHelper.updates!!){
-                Text(update.previousState + " changed to " + update.newStatus)
+            viewHelper.updates?.forEach { update ->
+                Text(update.message)
             }
         }
 
         Spacer(Modifier.size(5.dp))
         Text("Notes: ")
         Column {
-            for(note in viewHelper.notes!!){
+            viewHelper.notes?.forEach {note ->
                 Text(note)
             }
         }

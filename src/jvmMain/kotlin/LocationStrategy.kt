@@ -5,10 +5,11 @@ class LocationStrategy(var shipment: Shipment): UpdateStrategy {
         val timestamp = instruction[2].toLong()
         val location = instruction[3]
 
+        val message = "Package arrived in ${location}"
         shipment.status = newStatus
         shipment.currentLocation = location
 
-        val update = Update(previousStatus, newStatus, timestamp)
+        val update = Update(previousStatus, newStatus, timestamp, message)
         shipment.addUpdate(update)
     }
 }

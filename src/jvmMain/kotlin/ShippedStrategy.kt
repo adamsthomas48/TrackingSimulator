@@ -5,11 +5,12 @@ class ShippedStrategy(var shipment: Shipment): UpdateStrategy {
         val newStatus = instruction[0]
         val timestamp = instruction[2].toLong()
         val deliveryDate = instruction[3].toLong()
+        val message = "Packaged has been shipped"
 
         shipment.status = newStatus
         shipment.expectedDeliveryDate = deliveryDate
 
-        val update = Update(previousStatus, newStatus, timestamp)
+        val update = Update(previousStatus, newStatus, timestamp, message)
         shipment.addUpdate(update)
     }
 }

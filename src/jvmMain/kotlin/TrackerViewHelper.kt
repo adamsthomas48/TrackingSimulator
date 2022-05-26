@@ -15,8 +15,6 @@ class TrackerViewHelper(val shipmentId: String): Observer {
 
     init {
         shipment?.addObserver(this)
-        println("TrackerView Created")
-        println(shipment?.status ?: "Null")
     }
     override fun notify(ship: Shipment) {
         this.status = shipment?.status ?: "Null"

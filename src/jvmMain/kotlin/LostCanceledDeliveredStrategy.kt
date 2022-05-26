@@ -1,8 +1,11 @@
 class LostCanceledDeliveredStrategy(var shipment: Shipment): UpdateStrategy {
+    val previousStatus = shipment.status
+    var newStatus: String = ""
+    var timestamp: Long = 0
     override fun update(instruction: List<String>) {
-        val previousStatus = shipment.status
-        val newStatus = instruction[0]
-        val timestamp = instruction[2].toLong()
+
+        newStatus = instruction[0]
+        timestamp = instruction[2].toLong()
 
         val message = grabMessage(newStatus)
 

@@ -1,10 +1,12 @@
 class DelayedStrategy(var shipment: Shipment): UpdateStrategy {
-    override fun update(instruction: List<String>){
-        val previousStatus = shipment.status
-        val newStatus = instruction[0]
-        val timestamp = instruction[2].toLong()
+    val previousStatus = shipment.status
+    var newStatus: String = ""
+    var timestamp: Long = 0
 
-        val message = "Package has been delayed"
+    val message = "Package has been delayed"
+    override fun update(instruction: List<String>){
+        newStatus = instruction[0]
+        timestamp = instruction[2].toLong()
 
         shipment.status = newStatus
         shipment.expectedDeliveryDate = instruction[2].toLong()
